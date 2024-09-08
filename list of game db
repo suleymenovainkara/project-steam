@@ -1,0 +1,68 @@
+import sqlite3
+
+connection = sqlite3.connect('game.db')
+cursor1 = connection.cursor()
+
+cursor1.execute('CREATE TABLE Game (name_of_game TEXT, genre TEXT, price INT)')
+games_list = [
+    ('Resident Evil 4 REMAKE', 'horror', 28600),
+    ('Resident Evil 2 REMAKE', 'horror', 15210),
+    ('Resident Evil 3 REMAKE', 'horror', 15210),
+    ('Resident Evil 5', 'horror', 7749),
+    ('Resident Evil 6', 'horror', 11600),
+    ('Resident EVil. biohazard', 'horror', 7605),
+    ('Resident EVil VILLAGE', 'horror', 15210),
+    ('The Quarry', 'horror', 19999),
+    ('Tiny Bunny', 'horror', 2500),
+    ('Mortal Kombat 1', 'fighting', 23300),
+    ('Five Nights at Freddy', 'horror', 1050),#18 авг. 2014, 1050
+    ('Five Nights at Freddy 2', 'horror', 1600), #11 ноя. 2014, 1600
+    ('Five Nights at Freddy 3', 'horror', 1600), #3 мар. 2015, 1600
+    ('Five Nights at Freddy 3', 'horror', 1600), #24 июл. 2015, 1600
+    ('Five Nights at Freddy: Sister Location', 'horror', 1600), #7 окт. 2016, 1600
+    ('Dead by Daylight', 'horror', 4499), #14 июн. 2016, 4499
+    ('The Sims 4', 'Life stimulator', 0), #2 сен. 2014, 0
+    ('The Sims 3', 'Life stimulator', 2650), #2 июн. 2009, 2650
+    ('Dota 2', 'MOBA', 0), #9 июл. 2013, 0
+    ('Mortal Kombat 11', 'fighting', 16660), #23 апр. 2019, 16660
+    ('Street Fighter 6', 'fighting', 28468), #1 июн. 2023, 28 468
+    ('Lethal Company', 'horror', 2900), #24 окт. 2023, 2900
+    ('Poppy Playtime', 'horror', 0), #12 окт. 2021, 0
+    ('Poppy Playtime2', 'horror', 1850), #6 мая. 2022, 1850
+    ('Doki Doki Literature Club Plus!', 'psychological horror', 4638), #30 июн. 2021, 4638
+    ('Marvel’s Spider-Man Remastered', 'action', 23499), #12 авг. 2022, 23499
+    ('Granny', 'horror', 1050), #20 ноя. 2018, 1050
+    ('Granny Remake', 'horror', 2300), #20 июл. 2023, 2300
+    ('PUBG: BATTLEGROUNDS', 'Survival', 0), #21 дек. 2017, 0
+    ('Phasmophobia', 'horror', 2250), #18 сен. 2020, 2250
+    ('Inside The Backrooms', 'horror', 2100), #20 июн. 2022, 2100
+    ('Counter-Strike 2', 'First-person shooter', 0), #21 авг. 2012, 0
+    ('Little Nightmares', 'horror', 5990), #28 апр. 2017, 5990
+    ('Little Nightmares II', 'horror', 8990), #11 фев. 2021, 8990
+    ('theHunter: Call of the Wild', 'hunter', 5220), #16 фев. 2017, 5220
+    ('Pioneers of Pagonia', 'urban planning', 7600), #13 дек. 2023, 7600
+    ('Grand Theft Auto V', 'action', 10800), #14 апр. 2015, 10800
+    ('Dead Space', 'horror', 19999), #27 янв. 2023, 19999
+    ('Metro Exodus', 'First-person shooter', 11000), #14 фев. 2019, 11000
+    ('Fallout 4', 'post-apocalypse', 7000), #10 ноя. 2015, 7000
+    ('Fallout 3', 'post-apocalypse', 6710), #13 окт. 2009,6710
+    ('Fallout 76', 'dark humor', 13500), #14 апр. 2020, 13500
+    ('Detroit: Become Human', 'decisions with consequences', 10699), #18 июн. 2020, 10699
+    ('Cyberpunk 2077', 'cyberpunk', 13199), #10 дек. 2020, 13199
+    ('Red Dead Redemption 2', 'open world', 10999), #5 дек. 2019, 10999
+    ('Bendy and the Ink Machine', 'horror', 2650), #10 фев. 2017, 2650
+    ('Sally Face, Episode One', 'psychological horror', 890), #15 дек. 2016, 890
+    ('Sally Face - Season Pass', 'psychological horror', 3400), #15 дек. 2016, 3400
+    ('Night Security', 'horror', 2300), #17 июн. 2023, 2300
+    ('911: Cannibal', 'action', 1200), #14 апр. 2023, 1200
+    ('Garten of Banban 2', 'horror', 1500), #3 мар. 2023, 1500
+    ('Demonologist', 'horror', 4385), #25 сен. 2023, 4385
+]
+
+cursor1.executemany('insert into Game values (?, ?, ?)', games_list)
+
+for row in cursor1.execute('select * from Game'):
+     print(row)
+
+connection.commit()
+connection.close()
