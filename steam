@@ -1,0 +1,654 @@
+import tkinter as tk
+from PIL import Image, ImageTk
+import sqlite3
+from numpy import random
+import pyglet
+from tkinter import messagebox
+import subprocess
+
+pyglet.font.add_file('C:/Users/Админ/OneDrive/Рабочий стол/тис+по/RandomRecipePicker-main/relationalDB_complete_project_WINDOWS/fonts/Ubuntu-Bold.ttf')
+pyglet.font.add_file('C:/Users/Админ/OneDrive/Рабочий стол/тис+по/RandomRecipePicker-main/relationalDB_complete_project_WINDOWS/fonts/Shanti-Regular.ttf')
+
+
+def clear_widgets(frame):
+    for widget in frame.winfo_children():
+        widget.destroy()
+
+
+def us_db(username, hashed_password):
+
+    try:
+        connect = sqlite3.connect('C:/Users/Админ/PycharmProjects/pythonProject1/bm/users.db')
+        cursor = connect.cursor()
+        cursor.execute("SELECT * FROM users WHERE username=? AND password=?;", (username, hashed_password))
+        user_data = cursor.fetchone()
+        print(f"Query execution result: {user_data}")
+        return user_data
+    except sqlite3.Error as e:
+        print(f"Error executing the query: {e}")
+        return None
+    finally:
+        connect.close()
+
+
+def fetch_db():
+    connection = sqlite3.connect('C:/Users/Админ/PycharmProjects/pythonProject1/bm/games.db')
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM sqlite_schema WHERE type='table';")
+    all_tables = cursor.fetchall()
+    idx = random.randint(0, len(all_tables)-1)
+
+    table_name = all_tables[idx][1]
+    query = 'SELECT * FROM ' + table_name + ';'
+    cursor.execute(query)
+    table_records = cursor.fetchall()
+
+    connection.close()
+    return table_name, table_records
+
+def pre_process(table_name, table_records):
+    title = table_name[:-6]
+    title =''.join( [char if char.islower() else ' ' + char for char in title])
+
+    games = []
+
+    for i in table_records:
+        name_of_game = i[1]
+        genre = i[2]
+        age_group = i[3]
+        developer = i[4]
+        price = i[5]
+        release_date = i[6]
+        games.append(f'name of game: {name_of_game}\n genre: {genre}\n age group: {age_group}\n developer: {developer}\n price: {price}\n release date: {release_date}\n')
+
+    return title, games
+
+def run_python_game():
+    python_path = "python"
+    game_path = r'C:/Users/Админ/PycharmProjects/pythonProject1/bm/pong.py'
+
+    try:
+        subprocess.run([python_path, game_path], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Произошла ошибка при запуске игры: {e}")
+    except Exception as e:
+        print(f"Произошла неизвестная ошибка: {e}")
+
+
+
+
+current_username = ""
+
+def load_frame1():
+    clear_widgets(frame2)
+    clear_widgets(frame_registration)
+    frame1.tkraise()
+
+    logo_img = Image.open(
+        "C:/Users/Админ/OneDrive/Рабочий стол/тис+по/rrr/logos/logo1.png")
+    logo_img = ImageTk.PhotoImage(logo_img)
+    logo_widget = tk.Label(frame1, image=logo_img)
+    logo_widget.image = logo_img
+    logo_widget.pack(side=tk.LEFT, anchor=tk.NW, padx=10, pady=10)
+
+    r = tk.Label(
+        frame1,
+        text='Are ready for gaming?',
+        bg='white',
+        fg='mediumpurple2',
+        font=('Shanti', 30)
+    )
+    r.place(x=145, y=30)
+
+    username_var = tk.StringVar()
+    password_var = tk.StringVar()
+
+    username = tk.Label(
+        frame1,
+        text='Username: ',
+        bg='white',
+        fg='mediumpurple2',
+        font=('Shanti', 14)
+    )
+    username.place(x=40, y=535)
+
+    user = tk.Entry(frame1, textvariable=username_var, bg='white')
+    user.place(x=150, y=540)
+
+    password = tk.Label(
+        frame1,
+        text='Password: ',
+        bg='white',
+        fg='mediumpurple2',
+        font=('Shanti', 14)
+    )
+    password.place(x=40, y=580)
+    p = tk.Entry(frame1, textvariable=password_var, bg='white', show='*')
+    p.place(x=150, y=585)
+
+    button = tk.Button(
+        frame1,
+        text='Start',
+        font=('Ubuntu', 17),
+        bg='mediumpurple2',
+        fg='black',
+        cursor='hand2',
+        activebackground='blueviolet',
+        activeforeground='black',
+        command=lambda: check_credentials(username_var.get(), password_var.get()))
+    button.place(x=320, y=545)
+
+    fk = tk.Label(
+        frame1,
+        text="If you don't have an account, click the 'registration' button.",
+        bg='white',
+        fg='mediumpurple2',
+        font=('Shanti', 10))
+    fk.place(x=40, y=610)
+
+    button1=tk.Button(
+        frame1,
+        text='Registration',
+        font=('Ubuntu', 17),
+        bg='mediumpurple2',
+        fg='black',
+        cursor='hand2',
+        activebackground='blueviolet',
+        activeforeground='black',
+        command=lambda: load_registration_frame())
+    button1.place(x=450, y=545)
+
+
+def load_registration_frame():
+    clear_widgets(frame1)
+    frame_registration.tkraise()
+
+    logo_img = Image.open("C:/Users/Админ/OneDrive/Рабочий стол/тис+по/rrr/logos/logo1.png")
+    logo_img = ImageTk.PhotoImage(logo_img)
+    logo_widget = tk.Label(frame_registration, image=logo_img)
+    logo_widget.image = logo_img
+    logo_widget.pack(side=tk.LEFT, anchor=tk.NW, padx=10, pady=10)
+
+    r = tk.Label(
+        frame_registration,
+        text='Create an account',
+        bg='white',
+        fg='mediumpurple2',
+        font=('Shanti', 30)
+    )
+    r.place(x=160, y=30)
+
+    username_var = tk.StringVar()
+    password_var = tk.StringVar()
+
+    username_label = tk.Label(
+        frame_registration,
+        text='Username: ',
+        bg='white',
+        fg='mediumpurple2',
+        font=('Shanti', 14)
+    )
+    username_label.place(x=30, y=535)
+
+    username_entry = tk.Entry(frame_registration, textvariable=username_var, bg='white')
+    username_entry.place(x=140, y=540)
+
+    password_label = tk.Label(
+        frame_registration,
+        text='Password: ',
+        bg='white',
+        fg='mediumpurple2',
+        font=('Shanti', 14)
+    )
+    password_label.place(x=30, y=580)
+
+    password_entry = tk.Entry(frame_registration, textvariable=password_var, bg='white', show='*')
+    password_entry.place(x=140, y=585)
+
+    register_button = tk.Button(
+        frame_registration,
+        text='Register',
+        font=('Ubuntu', 17),
+        bg='mediumpurple2',
+        fg='black',
+        cursor='hand2',
+        activebackground='blueviolet',
+        activeforeground='black',
+        command=lambda: register_user(username_var.get(), password_var.get())
+    )
+    register_button.place(x=310, y=545)
+
+    back_button = tk.Button(
+        frame_registration,
+        text='Back to Login',
+        font=('Ubuntu', 17),
+        bg='mediumpurple2',
+        fg='black',
+        cursor='hand2',
+        activebackground='blueviolet',
+        activeforeground='black',
+        command=lambda: load_frame1()
+    )
+    back_button.place(x=445, y=545)
+
+def register_user(username, password):
+    try:
+        connect1 = sqlite3.connect('C:/Users/Админ/PycharmProjects/pythonProject1/bm/users.db')
+        cursor = connect1.cursor()
+        cursor.execute("INSERT INTO users (username, password) VALUES (?, ?);", (username, password))
+        connect1.commit()
+        print(f"User {username} registered successfully.")
+    except sqlite3.Error as e:
+        print(f"Error registering user {username}: {e}")
+    finally:
+        connect1.close()
+
+def check_credentials(username, hashed_password):
+    global current_username
+
+    user_data = us_db(username, hashed_password)
+
+    if user_data:
+        print("Правильные данные. Переход на load_frame2.")
+        load_frame2()
+    else:
+        print("Неправильные данные.")
+
+
+def load_frame2():
+    clear_widgets(frame1)
+    clear_widgets(frame3)
+    clear_widgets(frame4)
+    frame2.tkraise()
+    logo_img = Image.open(
+        "C:/Users/Админ/OneDrive/Рабочий стол/тис+по/rrr/logos/logo20.jpg")
+    logo_img = ImageTk.PhotoImage(logo_img)
+    logo_widget = tk.Label(frame2, image=logo_img)
+    logo_widget.image = logo_img
+    logo_widget.pack(side=tk.LEFT, anchor=tk.NW, padx=10, pady=10)
+
+    button1 = tk.Button(
+        frame2,
+        text='Games',
+        font=('Ubuntu', 17),
+        bg='pink',
+        fg='black',
+        cursor='hand2',
+        activebackground='#badee2',
+        activeforeground='black',
+        command= lambda: load_frame4())
+    button1.place(x=150, y=100)
+
+    button2 = tk.Button(
+        frame2,
+        text='Shuffle',
+        font=('Ubuntu', 17),
+        bg='pink',
+        fg='black',
+        cursor='hand2',
+        activebackground='#badee2',
+        activeforeground='black',
+        command=lambda: load_frame3())
+    button2.place(x=150, y=300)
+
+    button3 = tk.Button(
+        frame2,
+        text='Back',
+        font=('Ubuntu', 17),
+        bg='pink',
+        fg='black',
+        cursor='hand2',
+        activebackground='#badee2',
+        activeforeground='black',
+        command=lambda: load_frame1())
+    button3.place(x=160, y=365)
+
+def load_frame3():
+    clear_widgets(frame2)
+    frame3.tkraise()
+    frame3.lift()
+
+    table_name, table_record = fetch_db()
+    title, games = pre_process(table_name, table_record)
+
+    logo_img = Image.open(
+        "C:/Users/Админ/OneDrive/Рабочий стол/тис+по/rrr/logos/logo23.jpg")
+    logo_img = ImageTk.PhotoImage(logo_img)
+    logo_widget = tk.Label(frame3, image=logo_img)
+    logo_widget.image = logo_img
+    logo_widget.pack(side=tk.LEFT, anchor=tk.NW, padx=10, pady=10)
+
+    for i in games:
+        ac = tk.Label(
+            frame3,
+            text=i,
+            bg='white',
+            fg='brown3',
+            font=('Shanti', 15))
+        ac.place(x=60, y=90)
+
+    ae = tk.Label(
+        frame3,
+        text='*the price is in tenge.',
+        bg='white',
+        fg='brown3',
+        font=('Ubuntu', 10))
+    ae.place(x=50, y=260)
+
+    aw = tk.Button(
+        frame3,
+        text='Back',
+        font=('Ubuntu', 17),
+        bg='cornsilk',
+        fg='brown3',
+        cursor='hand2',
+        activebackground='#badee2',
+        activeforeground='black',
+        command=lambda: load_frame2())
+    aw.place(x=150, y=335)
+
+    surprise_button = tk.Button(
+        frame3,
+        text='Surprise',
+        font=('Ubuntu', 17),
+        bg='cornsilk',
+        fg='brown3',
+        cursor='hand2',
+        activebackground='#badee2',
+        activeforeground='black',
+        command=lambda: load_frame6()
+    )
+    surprise_button.place(x=428, y=335)
+
+    add_game_button = tk.Button(
+        frame3,
+        text='Add Game',
+        font=('Ubuntu', 17),
+        bg='cornsilk',
+        fg='brown3',
+        cursor='hand2',
+        activebackground='#badee2',
+        activeforeground='black',
+        command=lambda: show_add_game_window()
+        )
+    add_game_button.place(x=260, y=335)
+
+
+def load_frame4():
+    clear_widgets(frame2)
+    clear_widgets(frame5)
+    frame4.tkraise()
+    frame4.lift()
+    logo_img = Image.open(
+        "C:/Users/Админ/OneDrive/Рабочий стол/тис+по/rrr/logos/logo20.jpg")
+    logo_img = ImageTk.PhotoImage(logo_img)
+    logo_widget = tk.Label(frame4, image=logo_img)
+    logo_widget.image = logo_img
+    logo_widget.pack(side=tk.LEFT, anchor=tk.NW, padx=10, pady=10)
+
+    button1 = tk.Button(
+        frame4,
+        text='My games',
+        font=('Ubuntu', 17),
+        bg='pink',
+        fg='black',
+        command=lambda: show_user_games('dzhamilisa-kisa'))
+    button1.place(x=135, y=100)
+
+    button2 = tk.Button(
+        frame4,
+        text="Game's catalog",
+        font=('Ubuntu', 17),
+        bg='pink',
+        fg='black',
+        command=lambda: load_frame5())
+    button2.place(x=105, y=300)
+
+    button3 = tk.Button(
+        frame4,
+        text='Back',
+        font=('Ubuntu', 17),
+        bg='pink',
+        fg='black',
+        command=lambda: load_frame2()
+    )
+    button3.place(x=160, y=365)
+
+
+def load_frame5():
+    clear_widgets(frame4)
+    frame5.tkraise()
+    frame5.lift()
+    logo_img = Image.open(
+        "C:/Users/Админ/OneDrive/Рабочий стол/тис+по/rrr/logos/logo31.jpg")
+    logo_img = ImageTk.PhotoImage(logo_img)
+    logo_widget = tk.Label(frame5, image=logo_img)
+    logo_widget.image = logo_img
+    logo_widget.pack(side=tk.LEFT, anchor=tk.NW, padx=10, pady=10)
+
+    name_of_game_entry = tk.Entry(
+        frame5,
+        bg='RosyBrown1',
+        width=30)
+    name_of_game_entry.place(x=60, y=100)
+
+    search_result_label = tk.Label(
+        frame5,
+        text='',
+        font=('Shanti', 10),
+        bg='lavender blush',
+        fg='black')
+    search_result_label.place(x=200, y=160)
+
+    game_label = tk.Label(
+        frame5,
+        text="Game's catalog",
+        bg='lavender blush',
+        fg='black',
+        font=('Shanti', 17)
+    )
+    game_label.place(x=210, y=30)
+
+    add_game_button = tk.Button(
+        frame5,
+        text='Add Game',
+        font=('Ubuntu', 14),
+        bg='RosyBrown1',
+        fg='black',
+        command=lambda: show_add_game_window()
+    )
+    add_game_button.place(x=430, y=470)
+
+    search_button = tk.Button(
+        frame5,
+        text='Search',
+        font=('Ubuntu', 14),
+        bg='lavender blush',
+        fg='black',
+        command=lambda: search_game(name_of_game_entry.get(), search_result_label)
+    )
+    search_button.place(x=235, y=470)
+
+    exit_button = tk.Button(
+        frame5,
+        text='Back',
+        font=('Ubuntu', 14),
+        bg='RosyBrown1',
+        fg='black',
+        command=lambda: load_frame4())
+    exit_button.place(x=50, y=470)
+
+    open_pong_button = tk.Button(
+        frame5,
+        text="Pong",
+        font=('Ubuntu', 13),
+        bg='lavender blush',
+        command= lambda: run_python_game())
+    open_pong_button.place(x=400, y=92, width=100)
+
+
+def add_game_for_user(username, game_name):
+    connect_users = None
+    connect_games = None
+
+    try:
+        connect_users = sqlite3.connect('C:/Users/Админ/PycharmProjects/pythonProject1/bm/users.db')
+        cursor_users = connect_users.cursor()
+
+        cursor_users.execute("SELECT user_id FROM users WHERE username = ?;", (username,))
+        user_id = cursor_users.fetchone()
+
+        if user_id is not None:
+            connect_games = sqlite3.connect('C:/Users/Админ/PycharmProjects/pythonProject1/bm/list_game.db')
+            cursor_games = connect_games.cursor()
+
+            cursor_games.execute("SELECT name_of_game, COALESCE(price, 0) FROM Games WHERE user_id = ? AND name_of_game = ?;",
+                                 (user_id[0], game_name))
+            existing_game = cursor_games.fetchone()
+
+            if existing_game is None:
+
+                cursor_games.execute("SELECT COALESCE(price, 0) FROM Games WHERE name_of_game = ?;", (game_name,))
+                game_price = cursor_games.fetchone()[0]
+
+                cursor_games.execute("INSERT INTO Games (user_id, name_of_game) VALUES (?, ?);",
+                                     (user_id[0], game_name))
+                connect_games.commit()
+                tk.messagebox.showinfo("Success",
+                                       f"The game {game_name} (Price: {game_price}) has been added for the user {username}.")
+            else:
+                tk.messagebox.showerror("Error", f"The game {game_name} already exists for the user {username}.")
+
+    except sqlite3.Error as e:
+        tk.messagebox.showerror("Error", f"Error while adding the game: {e}")
+    finally:
+        if connect_users:
+            connect_users.close()
+        if connect_games:
+            connect_games.close()
+
+
+def show_add_game_window():
+    add_game_window = tk.Toplevel(root)
+    add_game_window.title("Add Game")
+    add_game_window.geometry("300x150")
+
+    game_name_label = tk.Label(add_game_window, text="Game Name:")
+    game_name_label.pack()
+    game_name_entry = tk.Entry(add_game_window)
+    game_name_entry.pack()
+
+    add_game_button = tk.Button(
+        add_game_window,
+        text="Add Game",
+        command=lambda: add_game_for_user('dzhamilisa-kisa', game_name_entry.get())
+    )
+    add_game_button.pack()
+
+
+def show_user_games(username):
+    connect_users = None
+    connect_games = None
+
+    try:
+        connect_users = sqlite3.connect('C:/Users/Админ/PycharmProjects/pythonProject1/bm/users.db')
+        cursor_users = connect_users.cursor()
+
+        cursor_users.execute("SELECT user_id FROM users WHERE username = ?;", (username,))
+        user_id = cursor_users.fetchone()
+
+        if user_id is not None:
+            connect_games = sqlite3.connect('C:/Users/Админ/PycharmProjects/pythonProject1/bm/list_game.db')
+            cursor_games = connect_games.cursor()
+
+            # Измененный запрос, включающий сумму потраченных денег
+            cursor_games.execute("SELECT name_of_game, COALESCE(price, 0) FROM Games WHERE user_id = ?;", (user_id[0],))
+            user_games = cursor_games.fetchall()
+
+            game_list = "\n".join([f"{game[0]} (Price: {game[1]})" for game in user_games])
+
+            # Рассчет суммы потраченных денег
+            total_spent = sum([game[1] for game in user_games])
+
+            tk.messagebox.showinfo("User Games", f"User {username}'s game list:\n{game_list}\n\nTotal spent: {total_spent}")
+        else:
+            tk.messagebox.showerror("Error", f"User {username} not found.")
+    except sqlite3.Error as e:
+        tk.messagebox.showerror("Error", f"Error while retrieving the list of games: {e}")
+    finally:
+        if connect_users:
+            connect_users.close()
+        if connect_games:
+            connect_games.close()
+
+
+
+def load_frame6():
+    clear_widgets(frame3)
+    frame6.tkraise()
+    frame6.lift()
+    logo_img = Image.open(
+        "C:/Users/Админ/OneDrive/Рабочий стол/тис+по/rrr/logos/logo33.jpg")
+    logo_img = ImageTk.PhotoImage(logo_img)
+    logo_widget = tk.Label(frame6, image=logo_img)
+    logo_widget.image = logo_img
+    logo_widget.pack(side=tk.LEFT, anchor=tk.NW, padx=10, pady=10)
+    tk.Label(
+        frame6,
+        text='Thank you for your attention! Please give me 100 points. \nI worked very hard.',
+        font=('Ubuntu', 14),
+        bg='grey89',
+        fg='black'
+    ).place(x=50, y=190)
+    ad = tk.Label(
+        frame6,
+        text='(here could have been your advertisement)',
+        font=('Ubuntu', 10),
+        bg='grey89',
+        fg='black'
+    )
+    ad.place(x=170, y=245)
+
+
+
+def search_game(game_name, result_label):
+    try:
+        connect_list_game = sqlite3.connect('C:/Users/Админ/PycharmProjects/pythonProject1/bm/game.db')
+        cursor_list_game = connect_list_game.cursor()
+
+        cursor_list_game.execute("SELECT name_of_game FROM Game WHERE name_of_game LIKE ?;", ('%' + game_name + '%',))
+        result = cursor_list_game.fetchall()
+
+        if result:
+            games_found = '\n'.join(game[0] for game in result)
+            result_label.config(text=f'games containing "{game_name}":\n{games_found}')
+        else:
+            result_label.config(text=f'games containing "{game_name}" not found.')
+    except sqlite3.Error as e:
+        print(f"Error while searching for the game: {e}")
+    finally:
+        connect_list_game.close()
+
+
+root = tk.Tk()
+root.title('Welcome to steam')
+root.eval('tk::PlaceWindow . center')
+
+frame1 = tk.Frame(root, width=500, height=600, bg='white')
+frame2 = tk.Frame(root, width=500, height=600, bg='white')
+frame3 = tk.Frame(root, width=500, height=600, bg='white')
+frame4 = tk.Frame(root, width=500, height=600, bg='white')
+frame5 = tk.Frame(root, width=500, height=600, bg='white')
+frame6 = tk.Frame(root, width=500, height=600, bg='white')
+frame_registration = tk.Frame(root, width=500, height=600, bg='white')
+frame1.grid(row=0, column=0)
+frame2.grid(row=0, column=0)
+frame3.grid(row=0, column=0)
+frame4.grid(row=0, column=0)
+frame5.grid(row=0, column=0)
+frame_registration.grid(row=0, column=0)
+frame6.grid(row=0, column=0)
+
+load_frame1()
+
+root.mainloop()
