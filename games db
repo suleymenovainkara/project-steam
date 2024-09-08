@@ -1,0 +1,300 @@
+import sqlite3
+
+connection = sqlite3.connect('games.db')
+cursor = connection.cursor()
+
+cursor.execute('CREATE TABLE RE4 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+game_list = [('table', 'Resident Evil 4 REMAKE', 'horror', '18+', 'CAPCOM Co., Ltd.', 28600, '24 March 2023')]
+
+cursor.execute('CREATE TABLE RE2 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+g_list = [('table', 'Resident Evil 2 REMAKE', 'horror', '18+', 'CAPCOM Co., Ltd.', 15210, '25 January 2019')]
+
+cursor.execute('CREATE TABLE RE3 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list1 = [('table', 'Resident Evil 3 REMAKE', 'horror', '18+', 'CAPCOM Co., Ltd.', 15210, '03 April 2020')]
+
+cursor.execute('CREATE TABLE RE5 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list2 = [('table', 'Resident Evil 5', 'horror', '18+', 'CAPCOM', 7749, '15 September 2009')]
+
+cursor.execute('CREATE TABLE RE6 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list3 = [('table', 'Resident Evil 6', 'horror', '18+', 'CAPCOM', 11600, '22 March 2013')]
+
+cursor.execute('CREATE TABLE RE7 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list4 = [('table', 'Resident EVil. biohazard', 'horror', '18+', 'CAPCOM Co., Ltd.', 7605, '24 January 2017')]
+
+cursor.execute('CREATE TABLE RE8 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list5 = [('table', 'Resident EVil VILLAGE', 'horror', '18+', 'CAPCOM Co., Ltd.', 15210, '07 May 2021')]
+
+cursor.execute('CREATE TABLE the_quarry (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list6 = [('table', 'The Quarry', 'decisions with consequences', '18+', 'Supermassive Games', 19999, '10 June 2022')]
+
+cursor.execute('CREATE TABLE tiny_bunny (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list7 = [('table', 'Tiny Bunny', 'horror', '18+', 'Saikono', 2500, '21 April 2021')]
+
+cursor.execute('CREATE TABLE mortal_kombat (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list8 = [('table', 'Mortal Kombat 1', 'fighting', '18+', 'NetherRealm Studios', 23300, '19 September 2023')]
+
+cursor.execute('CREATE TABLE FiveNightsatFreddy (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list9 = [('table', 'Five Nights at Freddy', 'horror', '18+', 'Scott Cawthon', 1050, '18 August 2014')]
+
+cursor.execute('CREATE TABLE FiveNightatFreddy2 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list10 = [('table', 'Five Nights at Freddy 2', 'horror', '18+', 'Scott Cawthon', 1600, '11 November 2014')]
+
+cursor.execute('CREATE TABLE FiveNightatFreddy3 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list11 = [('table', 'Five Nights at Freddy 3', 'horror', '18+', 'Scott Cawthon', 1600, '03 March 2015')]
+
+cursor.execute('CREATE TABLE FiveNightatFreddy4 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list12 = [('table', 'Five Nights at Freddy 4', 'horror', '18+', 'Scott Cawthon', 1600, '24 July 2015')]
+
+cursor.execute('CREATE TABLE FiveNightatFreddySisterLocation (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list13 = [('table', 'Five Nights at Freddy: Sister Location', 'horror', '18+', 'Scott Cawthon', 1600, '07 October 2016')]
+
+cursor.execute('CREATE TABLE DeadbyDaylight (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list14 = [('table', 'DeadbyDaylight', 'horror', '16+', 'Behaviour Interactive Inc.', 1600, '14 June 2016')]
+
+cursor.execute('CREATE TABLE TheSims4 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list15 = [('table', 'The Sims 4', 'Life stimulator', '12+', 'Maxis', 0, '02 September 2016')]
+
+cursor.execute('CREATE TABLE TheSims3 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list16 = [('table', 'The Sims 3', 'Life stimulator', '12+', 'Maxis', 2650, '02 June 2009')]
+
+cursor.execute('CREATE TABLE Dota2 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list17 = [('table', 'Dota 2', 'MOBA', '12+', 'Valve', 0, '09 July 2013')]
+
+cursor.execute('CREATE TABLE MortalKombat11 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list18 = [('table', 'Mortal Kombat 11', 'fighting', '16+', 'NetherRealm Studios, \nQLOC, Shiver', 16660, '23 April 2019')]
+
+cursor.execute('CREATE TABLE StreetFighter6 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list19 = [('table', 'Street Fighter 6', 'fighting', '16+', 'CAPCOM Co., Ltd.r', 28468, '01 June 2023')]
+
+cursor.execute('CREATE TABLE LethalCompany (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list20 = [('table', 'Lethal Company', 'horror', '16+', 'Zeekerss', 2900, '24 October 2023')]
+
+cursor.execute('CREATE TABLE poppy (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list21 = [('table', 'Poppy Playtime', 'horror', '16+', 'Mob Entertainment', 0, '12 October 2021')]
+
+cursor.execute('CREATE TABLE poppy2 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list22 = [('table', 'Poppy Playtime2', 'horror', '16+', 'Mob Entertainment', 1850, '06 May 2022')]
+
+cursor.execute('CREATE TABLE doki (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list23 = [('table', 'Doki Doki Literature Club Plus!', 'psychological horror', '18+', 'Team Salvato', 4638, '30 May 2021')]
+
+cursor.execute('CREATE TABLE spider (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list24 = [('table', 'Marvel’s Spider-Man Remastered', 'action', '18+', 'Insomniac Games, \nNixxes Software', 23499, '12 August 2022')]
+
+cursor.execute('CREATE TABLE granny (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list25 = [('table', 'Granny', 'horror', '18+', 'DVloper', 1050, '20 November 2018')]
+
+cursor.execute('CREATE TABLE grannyremake (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list26 = [('table', 'Granny Remake', 'horror', '18+', 'DVloper', 2300, '20 July 2023')]
+
+cursor.execute('CREATE TABLE pubg (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list27 = [('table', 'PUBG: BATTLEGROUNDS', 'Survival', '16+', 'KRAFTON, Inc.', 0, '21 December 2017')]
+
+cursor.execute('CREATE TABLE Phasmophobia (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list28 = [('table', 'PUBG: Phasmophobia', 'horror', '18+', 'Kinetic Games', 2250, '18 September 2020')]
+
+cursor.execute('CREATE TABLE backrooms (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list29 = [('table', 'Inside The Backrooms', 'horror', '18+', 'MrFatcat', 2100, '20 June 2022')]
+
+cursor.execute('CREATE TABLE CounterStrike (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list30 = [('table', 'Counter-Strike 2', 'First-person shoote', '16+', 'Valve', 0, '21 August 2012')]
+
+cursor.execute('CREATE TABLE little (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list31 = [('table', 'Little Nightmares', 'horror', '18+', 'Tarsier Studios', 5990, '28 April 2017')]
+
+cursor.execute('CREATE TABLE little2 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list32 = [('table', 'Little Nightmares II', 'horror', '18+', 'Tarsier Studios', 8990, '11 February 2021')]
+
+cursor.execute('CREATE TABLE hunter (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list33 = [('table', 'theHunter: Call of the Wild', 'hunter', '18+', 'Expansive Worlds', 5220, '16 February 2017')]
+
+cursor.execute('CREATE TABLE pop (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list34 = [('table', 'Pioneers of Pagonia', 'urban planning', '18+', 'Envision Entertainment', 7600, '13 December 2023')]
+
+cursor.execute('CREATE TABLE gta (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list35 = [('table', 'Grand Theft Auto V', 'action', '18+', 'Rockstar North', 10800, '14 April 2015')]
+
+cursor.execute('CREATE TABLE space (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list36 = [('table', 'Dead Space', 'horror', '18+', 'Motive', 19999, '27 January 2023')]
+
+cursor.execute('CREATE TABLE metro (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list37 = [('table', 'Metro Exodus', 'First-person shooter', '18+', '4A Games', 11000, '14 February 2019')]
+
+cursor.execute('CREATE TABLE fallout4 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list38 = [('table', 'Fallout 4', 'post-apocalypse', '18+', 'Bethesda Game Studios', 7000, '10 November 2015')]
+
+cursor.execute('CREATE TABLE fallout3 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list39 = [('table', 'Fallout 3', 'post-apocalypse', '18+', 'Bethesda Game Studios', 6710, '13 October 2009')]
+
+cursor.execute('CREATE TABLE fallout76 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list40 = [('table', 'Fallout 76', 'dark humor', '18+', 'Bethesda Game Studios', 13500, '14 April 2020')]
+
+cursor.execute('CREATE TABLE detroit (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list41 = [('table', 'Detroit: Become Human', 'decisions with consequences', '18+', 'Quantic Dream', 10699, '18 June 2020')]
+
+cursor.execute('CREATE TABLE cyberpunk (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list42 = [('table', 'Cyberpunk 2077', 'cyberpunk', '18+', 'CD PROJEKT RED', 13199, '10 December 2020')]
+
+cursor.execute('CREATE TABLE Red (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list43 = [('table', 'Red Dead Redemption 2', 'open world', '18+', 'Rockstar Games', 10999, '5 December 2019')]
+
+cursor.execute('CREATE TABLE bendy (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list44 = [('table', 'Bendy and the Ink Machine', 'horror', '18+', 'Joey Drew Studios', 2650, '10 February 2017')]
+
+cursor.execute('CREATE TABLE sally1 (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list45 = [('table', 'Sally Face, Episode One', 'psychological horror', '18+', 'Portable Moose', 890, '15 December 2016')]
+
+cursor.execute('CREATE TABLE sally (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list46 = [('table', 'Sally Face - Season Pass', 'psychological horror', '18+', 'Portable Moose', 3400, '15 December 2016')]
+
+cursor.execute('CREATE TABLE night_security (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list47 = [('table', 'Night Security', 'horror', '18+', 'Chillas Art', 2300, '17 June 2023')]
+
+cursor.execute('CREATE TABLE Cannibal (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list48 = [('table', '911: Cannibal', 'horror', '18+', 'Euphoric Brothers', 1200, '14 April 2023')]
+
+cursor.execute('CREATE TABLE banban (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list49 = [('table', 'Garten of Banban 2', 'horror', '18+', 'Euphoric Brothers', 1500, '3 March 2023')]
+
+cursor.execute('CREATE TABLE Demonologist (type TEXT, name_of_game TEXT, genre TEXT, age_group TEXT, developer TEXT, price INT, release_date TEXT)')
+
+list50 = [('table', 'Demonologist', 'horror', '18+', 'Clock Wizard Games', 4385, '25 September 2023')]
+
+cursor.executemany('insert into RE4 values (?, ?, ?, ?, ?, ?, ?)', game_list)
+cursor.executemany('insert into RE2 values (?, ?, ?, ?, ?, ?, ?)', g_list)
+cursor.executemany('insert into RE3 values (?, ?, ?, ?, ?, ?, ?)', list1)
+cursor.executemany('insert into RE5 values (?, ?, ?, ?, ?, ?, ?)', list2)
+cursor.executemany('insert into RE6 values (?, ?, ?, ?, ?, ?, ?)', list3)
+cursor.executemany('insert into RE7 values (?, ?, ?, ?, ?, ?, ?)', list4)
+cursor.executemany('insert into RE8 values (?, ?, ?, ?, ?, ?, ?)', list5)
+cursor.executemany('insert into the_quarry values (?, ?, ?, ?, ?, ?, ?)', list6)
+cursor.executemany('insert into tiny_bunny values (?, ?, ?, ?, ?, ?, ?)', list7)
+cursor.executemany('insert into mortal_kombat values (?, ?, ?, ?, ?, ?, ?)', list8)
+cursor.executemany('insert into FiveNightsatFreddy values (?, ?, ?, ?, ?, ?, ?)', list9)
+cursor.executemany('insert into FiveNightatFreddy2 values (?, ?, ?, ?, ?, ?, ?)', list10)
+cursor.executemany('insert into FiveNightatFreddy3 values (?, ?, ?, ?, ?, ?, ?)', list11)
+cursor.executemany('insert into FiveNightatFreddy4 values (?, ?, ?, ?, ?, ?, ?)', list12)
+cursor.executemany('insert into FiveNightatFreddySisterLocation values (?, ?, ?, ?, ?, ?, ?)', list13)
+cursor.executemany('insert into DeadbyDaylight values (?, ?, ?, ?, ?, ?, ?)', list14)
+cursor.executemany('insert into TheSims4 values (?, ?, ?, ?, ?, ?, ?)', list15)
+cursor.executemany('insert into TheSims3 values (?, ?, ?, ?, ?, ?, ?)', list16)
+cursor.executemany('insert into Dota2 values (?, ?, ?, ?, ?, ?, ?)', list17)
+cursor.executemany('insert into MortalKombat11 values (?, ?, ?, ?, ?, ?, ?)', list18)
+cursor.executemany('insert into StreetFighter6 values (?, ?, ?, ?, ?, ?, ?)', list19)
+cursor.executemany('insert into LethalCompany values (?, ?, ?, ?, ?, ?, ?)', list20)
+cursor.executemany('insert into poppy values (?, ?, ?, ?, ?, ?, ?)', list21)
+cursor.executemany('insert into poppy2 values (?, ?, ?, ?, ?, ?, ?)', list22)
+cursor.executemany('insert into doki values (?, ?, ?, ?, ?, ?, ?)', list23)
+cursor.executemany('insert into spider values (?, ?, ?, ?, ?, ?, ?)', list24)
+cursor.executemany('insert into granny values (?, ?, ?, ?, ?, ?, ?)', list25)
+cursor.executemany('insert into grannyremake values (?, ?, ?, ?, ?, ?, ?)', list26)
+cursor.executemany('insert into pubg values (?, ?, ?, ?, ?, ?, ?)', list27)
+cursor.executemany('insert into Phasmophobia values (?, ?, ?, ?, ?, ?, ?)', list28)
+cursor.executemany('insert into backrooms values (?, ?, ?, ?, ?, ?, ?)', list29)
+cursor.executemany('insert into CounterStrike values (?, ?, ?, ?, ?, ?, ?)', list30)
+cursor.executemany('insert into little values (?, ?, ?, ?, ?, ?, ?)', list31)
+cursor.executemany('insert into little2 values (?, ?, ?, ?, ?, ?, ?)', list32)
+cursor.executemany('insert into hunter values (?, ?, ?, ?, ?, ?, ?)', list33)
+cursor.executemany('insert into pop values (?, ?, ?, ?, ?, ?, ?)', list34)
+cursor.executemany('insert into gta values (?, ?, ?, ?, ?, ?, ?)', list35)
+cursor.executemany('insert into space values (?, ?, ?, ?, ?, ?, ?)', list36)
+cursor.executemany('insert into metro values (?, ?, ?, ?, ?, ?, ?)', list37)
+cursor.executemany('insert into fallout4 values (?, ?, ?, ?, ?, ?, ?)', list38)
+cursor.executemany('insert into fallout3 values (?, ?, ?, ?, ?, ?, ?)', list39)
+cursor.executemany('insert into fallout76 values (?, ?, ?, ?, ?, ?, ?)', list40)
+cursor.executemany('insert into detroit values (?, ?, ?, ?, ?, ?, ?)', list41)
+cursor.executemany('insert into cyberpunk values (?, ?, ?, ?, ?, ?, ?)', list42)
+cursor.executemany('insert into Red values (?, ?, ?, ?, ?, ?, ?)', list43)
+cursor.executemany('insert into bendy values (?, ?, ?, ?, ?, ?, ?)', list44)
+cursor.executemany('insert into sally1 values (?, ?, ?, ?, ?, ?, ?)', list45)
+cursor.executemany('insert into sally values (?, ?, ?, ?, ?, ?, ?)', list46)
+cursor.executemany('insert into night_security values (?, ?, ?, ?, ?, ?, ?)', list47)
+cursor.executemany('insert into Cannibal values (?, ?, ?, ?, ?, ?, ?)', list48)
+cursor.executemany('insert into banban values (?, ?, ?, ?, ?, ?, ?)', list49)
+cursor.executemany('insert into Demonologist values (?, ?, ?, ?, ?, ?, ?)', list50)
+
+
+
+for row in cursor.execute('select * from RE4'):
+     print(row)
+
+for row in cursor.execute('select * from RE2'):
+     print(row)
+
+for row in cursor.execute('select * from RE3'):
+     print(row)
+
+for row in cursor.execute('select * from RE5'):
+     print(row)
+
+for row in cursor.execute('select * from RE6'):
+     print(row)
+
+for row in cursor.execute('select * from RE7'):
+     print(row)
+
+for row in cursor.execute('select * from RE8'):
+     print(row)
+
+for row in cursor.execute('select * from the_quarry'):
+     print(row)
+
+for row in cursor.execute('select * from tiny_bunny'):
+     print(row)
+
+for row in cursor.execute('select * from mortal_kombat'):
+     print(row)
+
+connection.commit()
+connection.close()
