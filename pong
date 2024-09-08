@@ -1,0 +1,830 @@
+import pygame
+import random as rn
+
+pygame.init()
+
+WIDTH = 1440
+HEIGHT = 500
+FPS = 90
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Ping Pong")
+clock = pygame.time.Clock()
+font_score = pygame.font.SysFont(None, 42)
+win_score_font = pygame.font.SysFont(None, 24)
+font_menu = pygame.font.SysFont(None, 64)
+pygame.mixer_music.load('music.mp3')
+pygame.mixer_music.play(-1)
+pygame.mixer.music.set_volume(0.05)
+hit_sound = pygame.mixer.Sound('hitsound.wav')
+hit_sound.set_volume(0.3)
+goal_sound = pygame.mixer.Sound('goal.mp3')
+goal_sound.set_volume(0.1)
+win_sound = pygame.mixer.Sound('win.mp3')
+win_sound.set_volume(0.2)
+
+
+# Colors (R, G, B)
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+MAGENTA = (255, 0, 255)
+BLUE = (0, 0, 255)
+GREY = (58, 58, 58)
+DARKGREEN = (0, 100, 0)
+ORANGE = (255, 165, 0)
+CYAN = (175, 238, 238)
+LIGHTSKYBLUE = (135, 206, 250)
+GRAY = (128, 128, 128)
+
+# Set up game elements
+player1 = pygame.Rect(20, HEIGHT // 2 - 35, 11, 70)
+player2 = pygame.Rect(WIDTH - 20 - 11, HEIGHT // 2 - 35, 11, 70)
+ball = pygame.Rect(WIDTH // 2 - 10, HEIGHT // 2 - 10, 20, 20)
+if FPS == 90:
+    ball_velocity = pygame.Vector2(10, 6)
+elif FPS == 60:
+    ball_velocity = pygame.Vector2(14, 8)
+elif FPS == 30:
+    ball_velocity = pygame.Vector2(16, 10)
+
+
+def display_score():
+    score_tex = win_score_font.render(f'{win_score1} : {win_score2}', True, WHITE)
+    screen.blit(score_tex, (WIDTH // 2 - score_tex.get_width() // 2, 5))
+    score_text = font_score.render(f"{nickname1} {score_player1} : {nickname2} {score_player2}", True, WHITE)
+    screen.blit(score_text, (WIDTH // 2 - score_text.get_width() // 2, 20))
+
+
+def newgame():
+    global score_player1, score_player2, win_score1, win_score2
+    win_score1 = 0
+    win_score2 = 0
+    score_player1 = 0
+    score_player2 = 0
+    ball.center = (WIDTH // 2, HEIGHT // 2)
+    player1.center = (20, HEIGHT // 2)
+    player2.center = (WIDTH - 20 - 11, HEIGHT // 2)
+
+    startgame = True
+
+    while startgame:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE]:
+            startgame = False
+
+        screen.fill(DARKGREEN)
+
+        goal_text = font_menu.render('Tap SPACE to serve the ball', True, WHITE)
+        goal_rect = goal_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+        screen.blit(goal_text, goal_rect)
+
+        pygame.display.flip()
+        clock.tick(FPS)
+
+
+def goal():
+    global goal_active
+    goal_active = True
+    global score_player1, score_player2
+    goal_text = font_menu.render('Tap SPACE to serve the ball', True, WHITE)
+    goal_rect = goal_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+    while goal_active:
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                pygame.quit()
+                return
+
+        if score_player1 == win_score or score_player2 == win_score:
+            goal_active = False
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE]:
+            goal_active = False
+            ball_velocity.x *= -1
+        if keys[pygame.K_ESCAPE]:
+            resume()
+
+        screen.fill(DARKGREEN)
+
+        goal_text = font_menu.render('Tap SPACE to serve the ball', True, WHITE)
+        goal_rect = goal_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+        screen.blit(goal_text, goal_rect)
+
+        pause1 = pygame.image.load('pause.png')
+        pause = pygame.transform.scale(pause1, (25, 25))
+        pause_rect = pause.get_rect(center=(WIDTH - 100, 25))
+        screen.blit(pause, pause_rect)
+        mouse_pos = pygame.mouse.get_pos()
+        if pause_rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0]:
+                resume()
+        screen.blit(goal_text, goal_rect)
+
+        if ball.x <= -50:
+            score_player2 += 1
+            ball.center = (WIDTH - 200, HEIGHT // 2)
+        if ball.x >= WIDTH + 50:
+            score_player1 += 1
+            ball.center = (200, HEIGHT // 2)
+
+        pygame.draw.rect(screen, CYAN, player1, 2)
+        pygame.draw.rect(screen, MAGENTA, player2, 2)
+        pygame.draw.line(screen, WHITE, (WIDTH // 2, 0), (WIDTH // 2, HEIGHT))
+        pygame.draw.ellipse(screen, WHITE, ball)
+
+        display_score()
+        pygame.display.flip()
+        clock.tick(FPS)
+
+
+# Game menu
+def main_menu():
+    backgroundd1 = pygame.image.load('C:/Users/Админ/PycharmProjects/pythonProject1/bm/background1.png')
+    background1 = pygame.transform.scale(backgroundd1, (WIDTH, HEIGHT))
+    backgroundd2 = pygame.image.load('C:/Users/Админ/PycharmProjects/pythonProject1/bm/background2.png')
+    background2 = pygame.transform.scale(backgroundd2, (WIDTH, HEIGHT))
+    backgroundd3 = pygame.image.load('C:/Users/Админ/PycharmProjects/pythonProject1/bm/background3.png')
+    background3 = pygame.transform.scale(backgroundd3, (WIDTH, HEIGHT))
+    backgroundd4 = pygame.image.load('C:/Users/Админ/PycharmProjects/pythonProject1/bm/background4.png')
+    background4 = pygame.transform.scale(backgroundd4, (WIDTH, HEIGHT))
+    backgroundss = (background1, background2, background3, background4)
+    background = rn.randint(0, len(backgroundss) - 1)
+    random_back = backgroundss[background]
+
+    menu_active = True
+    pygame.mixer.music.set_volume(0)
+    # Draw menu text
+    # LOGO1 = pygame.image.load('logo.png')
+    # LOGO = pygame.transform.scale(LOGO1, (100, 100))
+    start_text = font_menu.render("New Game", True, WHITE)
+    exit_text = font_menu.render("Exit", True, WHITE)
+
+    # LOGOrect = LOGO.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 120))
+    start_rect = start_text.get_rect(center=(WIDTH // 2 + 7, HEIGHT // 2 + 10))
+    exit_rect = exit_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 70))
+
+    while menu_active:
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                pygame.quit()
+                return
+
+            if e.type == pygame.MOUSEMOTION:
+                if start_rect.collidepoint(e.pos):
+                    start_text = font_menu.render("New Game", True, RED)
+                else:
+                    start_text = font_menu.render("New Game", True, WHITE)
+                if exit_rect.collidepoint(e.pos):
+                    exit_text = font_menu.render("Exit", True, RED)
+                else:
+                    exit_text = font_menu.render("Exit", True, WHITE)
+
+        screen.fill(ORANGE)
+
+        screen.blit(random_back, (0, 0))
+        # screen.blit(LOGO, LOGOrect)
+        screen.blit(start_text, start_rect)
+        screen.blit(exit_text, exit_rect)
+
+        mouse_pos = pygame.mouse.get_pos()
+        if start_rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0]:
+                # Start the game
+                global score_player1, score_player2
+                nicknames()
+                menu_active = False
+
+        if exit_rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0]:
+                pygame.quit()
+                return
+
+        pygame.display.flip()
+        clock.tick(FPS)
+
+
+def nicknames():
+    nicknames_active = True
+    pygame.mixer.music.set_volume(0)
+    global nickname1, nickname2
+    nickname1 = ''
+    nickname2 = ''
+    inputrect = pygame.Rect(WIDTH // 2 - 15, HEIGHT // 2 - 115, 200, 50)
+    inputrect2 = pygame.Rect(WIDTH // 2 - 15, HEIGHT // 2 - 35, 200, 50)
+
+    color_active1 = pygame.Color(GRAY)
+    color_inactive1 = pygame.Color(LIGHTSKYBLUE)
+    color1 = color_inactive1
+    color_active2 = pygame.Color(GRAY)
+    color_inactive2 = pygame.Color(LIGHTSKYBLUE)
+    color2 = color_inactive2
+
+    active_input1 = False
+    active_input2 = False
+
+    go = font_menu.render('GO', True, WHITE)
+    go_rect = go.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 120))
+    go_select = False
+
+    while nicknames_active:
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                pygame.quit()
+                return
+
+            if e.type == pygame.MOUSEBUTTONDOWN:
+                if inputrect.collidepoint(e.pos):
+                    active_input1 = True
+                else:
+                    active_input1 = False
+
+            if e.type == pygame.KEYDOWN:
+                if active_input1 == True:
+                    if e.key == pygame.K_BACKSPACE:
+                        nickname1 = nickname1[:-1]
+                    elif e.key == pygame.K_TAB:
+                        active_input2 = True
+                        active_input1 = False
+                    else:
+                        nickname1 += e.unicode
+
+            if e.type == pygame.MOUSEBUTTONDOWN:
+                if inputrect2.collidepoint(e.pos):
+                    active_input2 = True
+                else:
+                    active_input2 = False
+            if e.type == pygame.KEYDOWN:
+                if active_input2 == True:
+                    if e.key == pygame.K_BACKSPACE:
+                        nickname2 = nickname2[:-1]
+                    elif e.key == pygame.K_TAB or e.key == pygame.K_RETURN:
+                        nickname2 = nickname2
+                    else:
+                        nickname2 += e.unicode
+                if e.key == pygame.K_RETURN:
+                    newgame()
+                    nicknames_active = False
+
+            if e.type == pygame.MOUSEMOTION:
+                if go_rect.collidepoint(e.pos):
+                    go_select = True
+                else:
+                    go_select = False
+
+        if go_select:
+            go = font_menu.render("GO", True, RED)
+        else:
+            go = font_menu.render("GO", True, WHITE)
+
+        screen.fill(CYAN)
+
+        nickname1_surface = font_score.render(nickname1, True, WHITE)
+        nickname2_surface = font_score.render(nickname2, True, WHITE)
+        pygame.draw.rect(screen, color1, inputrect, 3)
+        pygame.draw.rect(screen, color2, inputrect2, 3)
+        screen.blit(nickname2_surface, (inputrect2.x + 5, inputrect2.y + 5))
+        screen.blit(nickname1_surface, (inputrect.x + 5, inputrect.y + 5))
+        inputrect.w = max(50, 300)
+        inputrect2.w = max(50, 300)
+
+        if active_input1:
+            color1 = color_active1
+        else:
+            color1 = color_inactive1
+        if active_input2:
+            color2 = color_active2
+        else:
+            color2 = color_inactive2
+
+        back1 = pygame.image.load('C:/Users/Админ/PycharmProjects/pythonProject1/bm/back.png')
+        back = pygame.transform.scale(back1, (40, 40))
+        input_name1 = font_menu.render('player 1', True, WHITE)
+        input_name2 = font_menu.render('player 2 ', True, WHITE)
+
+        back_rect = back.get_rect(center=(50, 50))
+        name1 = input_name1.get_rect(center=(WIDTH // 2 - 150, HEIGHT // 2 - 94))
+        name2 = input_name2.get_rect(center=(WIDTH // 2 - 148, HEIGHT // 2 - 10))
+
+        screen.blit(back, back_rect)
+        screen.blit(input_name1, name1)
+        screen.blit(input_name2, name2)
+        screen.blit(go, go_rect)
+
+        mouse_pos = pygame.mouse.get_pos()
+        if back_rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0]:
+                main_menu()
+                return
+
+        if go_rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0]:
+                nicknames_active = False
+                newgame()
+
+        pygame.display.flip()
+        clock.tick(FPS)
+
+
+def resume():
+    def surenewgame():
+        sure_active = True
+        you_sure = pygame.Rect(WIDTH // 2 - WIDTH // 6, HEIGHT // 4, WIDTH // 3, HEIGHT // 3)
+        you_sure1 = pygame.Rect(WIDTH // 2 - WIDTH // 6, HEIGHT // 4, WIDTH // 3, HEIGHT // 3)
+
+        yousure_text = font_score.render('Are you sure?', True, WHITE)
+        yousure_rect = yousure_text.get_rect(center=(WIDTH // 2, HEIGHT // 3))
+
+        yesure_text = font_score.render('Yes', True, WHITE)
+        yesure_rect = yesure_text.get_rect(center=(WIDTH // 2 - 120, HEIGHT // 2 - 20))
+
+        nosure_text = font_score.render('No', True, WHITE)
+        nosure_rect = nosure_text.get_rect(center=(WIDTH // 2 + 120, HEIGHT // 2 - 20))
+
+        while sure_active:
+            for e in pygame.event.get():
+                if e.type == pygame.QUIT:
+                    pygame.quit()
+                    return
+
+                if e.type == pygame.MOUSEMOTION:
+                    if yesure_rect.collidepoint(e.pos):
+                        yesure_text = font_score.render("Yes", True, RED)
+                    else:
+                        yesure_text = font_score.render("Yes", True, WHITE)
+                    if nosure_rect.collidepoint(e.pos):
+                        nosure_text = font_score.render("No", True, RED)
+                    else:
+                        nosure_text = font_score.render("No", True, WHITE)
+
+            pygame.draw.rect(screen, CYAN, (you_sure))
+            pygame.draw.rect(screen, WHITE, (you_sure1), 2)
+
+            screen.blit(yousure_text, yousure_rect)
+            screen.blit(yesure_text, yesure_rect)
+            screen.blit(nosure_text, nosure_rect)
+
+            mouse_pos = pygame.mouse.get_pos()
+            if yesure_rect.collidepoint(mouse_pos):
+                if pygame.mouse.get_pressed()[0]:
+                    newgame()
+                    global resume_active
+                    sure_active = False
+                    resume_active = False
+
+            if nosure_rect.collidepoint(mouse_pos):
+                if pygame.mouse.get_pressed()[0]:
+                    sure_active = False
+
+            pygame.display.flip()
+            clock.tick(FPS)
+
+    def suremainmenu():
+        sure_active = True
+        you_sure = pygame.Rect(WIDTH // 2 - WIDTH // 6, HEIGHT // 4, WIDTH // 3, HEIGHT // 3)
+        you_sure1 = pygame.Rect(WIDTH // 2 - WIDTH // 6, HEIGHT // 4, WIDTH // 3, HEIGHT // 3)
+
+        yousure_text = font_score.render('Are you sure?', True, WHITE)
+        yousure_rect = yousure_text.get_rect(center=(WIDTH // 2, HEIGHT // 3))
+
+        yesure_text = font_score.render('Yes', True, WHITE)
+        yesure_rect = yesure_text.get_rect(center=(WIDTH // 2 - 120, HEIGHT // 2 - 20))
+
+        nosure_text = font_score.render('No', True, WHITE)
+        nosure_rect = nosure_text.get_rect(center=(WIDTH // 2 + 120, HEIGHT // 2 - 20))
+
+        while sure_active:
+            for e in pygame.event.get():
+                if e.type == pygame.QUIT:
+                    pygame.quit()
+                    return
+
+                if e.type == pygame.MOUSEMOTION:
+                    if yesure_rect.collidepoint(e.pos):
+                        yesure_text = font_score.render("Yes", True, RED)
+                    else:
+                        yesure_text = font_score.render("Yes", True, WHITE)
+                    if nosure_rect.collidepoint(e.pos):
+                        nosure_text = font_score.render("No", True, RED)
+                    else:
+                        nosure_text = font_score.render("No", True, WHITE)
+
+            pygame.draw.rect(screen, CYAN, (you_sure))
+            pygame.draw.rect(screen, WHITE, (you_sure1), 2)
+
+            screen.blit(yousure_text, yousure_rect)
+            screen.blit(yesure_text, yesure_rect)
+            screen.blit(nosure_text, nosure_rect)
+
+            mouse_pos = pygame.mouse.get_pos()
+            if yesure_rect.collidepoint(mouse_pos):
+                if pygame.mouse.get_pressed()[0]:
+                    global resume_active
+                    resume_active = False
+                    sure_active = False
+                    main_menu()
+
+            if nosure_rect.collidepoint(mouse_pos):
+                if pygame.mouse.get_pressed()[0]:
+                    sure_active = False
+
+            pygame.display.flip()
+            clock.tick(FPS)
+
+    def surerematch():
+        sure_active = True
+        you_sure = pygame.Rect(WIDTH // 2 - WIDTH // 6, HEIGHT // 4, WIDTH // 3, HEIGHT // 3)
+        you_sure1 = pygame.Rect(WIDTH // 2 - WIDTH // 6, HEIGHT // 4, WIDTH // 3, HEIGHT // 3)
+
+        yousure_text = font_score.render('Are you sure?', True, WHITE)
+        yousure_rect = yousure_text.get_rect(center=(WIDTH // 2, HEIGHT // 3))
+
+        yesure_text = font_score.render('Yes', True, WHITE)
+        yesure_rect = yesure_text.get_rect(center=(WIDTH // 2 - 120, HEIGHT // 2 - 20))
+
+        nosure_text = font_score.render('No', True, WHITE)
+        nosure_rect = nosure_text.get_rect(center=(WIDTH // 2 + 120, HEIGHT // 2 - 20))
+
+        while sure_active:
+            for e in pygame.event.get():
+                if e.type == pygame.QUIT:
+                    pygame.quit()
+                    return
+
+                if e.type == pygame.MOUSEMOTION:
+                    if yesure_rect.collidepoint(e.pos):
+                        yesure_text = font_score.render("Yes", True, RED)
+                    else:
+                        yesure_text = font_score.render("Yes", True, WHITE)
+                    if nosure_rect.collidepoint(e.pos):
+                        nosure_text = font_score.render("No", True, RED)
+                    else:
+                        nosure_text = font_score.render("No", True, WHITE)
+
+            pygame.draw.rect(screen, CYAN, (you_sure))
+            pygame.draw.rect(screen, WHITE, (you_sure1), 2)
+
+            screen.blit(yousure_text, yousure_rect)
+            screen.blit(yesure_text, yesure_rect)
+            screen.blit(nosure_text, nosure_rect)
+
+            mouse_pos = pygame.mouse.get_pos()
+            if yesure_rect.collidepoint(mouse_pos):
+                if pygame.mouse.get_pressed()[0]:
+                    global resume_active, score_player1, score_player2
+                    score_player1 = 0
+                    score_player2 = 0
+                    ball.center = (WIDTH // 2, HEIGHT // 2)
+                    player1.center = (20, HEIGHT // 2)
+                    player2.center = (WIDTH - 20 - 11, HEIGHT // 2)
+                    sure_active = False
+                    resume_active = False
+
+            if nosure_rect.collidepoint(mouse_pos):
+                if pygame.mouse.get_pressed()[0]:
+                    sure_active = False
+
+            pygame.display.flip()
+            clock.tick(FPS)
+
+    def surequit():
+        sure_active = True
+        you_sure = pygame.Rect(WIDTH // 2 - WIDTH // 6, HEIGHT // 4, WIDTH // 3, HEIGHT // 3)
+        you_sure1 = pygame.Rect(WIDTH // 2 - WIDTH // 6, HEIGHT // 4, WIDTH // 3, HEIGHT // 3)
+
+        yousure_text = font_score.render('Are you sure?', True, WHITE)
+        yousure_rect = yousure_text.get_rect(center=(WIDTH // 2, HEIGHT // 3))
+
+        yesure_text = font_score.render('Yes', True, WHITE)
+        yesure_rect = yesure_text.get_rect(center=(WIDTH // 2 - 120, HEIGHT // 2 - 20))
+
+        nosure_text = font_score.render('No', True, WHITE)
+        nosure_rect = nosure_text.get_rect(center=(WIDTH // 2 + 120, HEIGHT // 2 - 20))
+
+        while sure_active:
+            for e in pygame.event.get():
+                if e.type == pygame.QUIT:
+                    pygame.quit()
+                    return
+
+                if e.type == pygame.MOUSEMOTION:
+                    if yesure_rect.collidepoint(e.pos):
+                        yesure_text = font_score.render("Yes", True, RED)
+                    else:
+                        yesure_text = font_score.render("Yes", True, WHITE)
+                    if nosure_rect.collidepoint(e.pos):
+                        nosure_text = font_score.render("No", True, RED)
+                    else:
+                        nosure_text = font_score.render("No", True, WHITE)
+
+            pygame.draw.rect(screen, CYAN, (you_sure))
+            pygame.draw.rect(screen, WHITE, (you_sure1), 2)
+
+            screen.blit(yousure_text, yousure_rect)
+            screen.blit(yesure_text, yesure_rect)
+            screen.blit(nosure_text, nosure_rect)
+
+            mouse_pos = pygame.mouse.get_pos()
+            if yesure_rect.collidepoint(mouse_pos):
+                if pygame.mouse.get_pressed()[0]:
+                    pygame.quit()
+
+            if nosure_rect.collidepoint(mouse_pos):
+                if pygame.mouse.get_pressed()[0]:
+                    sure_active = False
+
+            pygame.display.flip()
+            clock.tick(FPS)
+
+    resume_text = font_menu.render("Resume", True, WHITE)
+    rematch_text = font_menu.render('Rematch', True, WHITE)
+    newgame_text = font_menu.render('New Game', True, WHITE)
+    main_menu_text = font_menu.render('Main Menu', True, WHITE)
+    quit_text = font_menu.render('Quit Game', True, WHITE)
+
+    resume_rect = resume_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 45))
+    rematch_rect = resume_text.get_rect(center=(WIDTH // 2 - 10, HEIGHT // 2))
+    newgame_rect = newgame_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 50))
+    main_menu_rect = main_menu_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 100))
+    quit_rect = quit_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 150))
+
+    global resume_active
+    resume_active = True
+    pygame.mixer.music.set_volume(0)
+    while resume_active:
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                pygame.quit()
+
+            if e.type == pygame.MOUSEMOTION:
+                if resume_rect.collidepoint(e.pos):
+                    resume_text = font_menu.render("Resume", True, RED)
+                else:
+                    resume_text = font_menu.render("Resume", True, WHITE)
+                if rematch_rect.collidepoint(e.pos):
+                    rematch_text = font_menu.render("Rematch", True, RED)
+                else:
+                    rematch_text = font_menu.render("Rematch", True, WHITE)
+                if newgame_rect.collidepoint(e.pos):
+                    newgame_text = font_menu.render("New Game", True, RED)
+                else:
+                    newgame_text = font_menu.render("New Game", True, WHITE)
+                if main_menu_rect.collidepoint(e.pos):
+                    main_menu_text = font_menu.render("Main Menu", True, RED)
+                else:
+                    main_menu_text = font_menu.render("Main Menu", True, WHITE)
+                if quit_rect.collidepoint(e.pos):
+                    quit_text = font_menu.render("Quit Game", True, RED)
+                else:
+                    quit_text = font_menu.render("Quit Game", True, WHITE)
+
+        screen.fill(ORANGE)
+
+        screen.blit(resume_text, resume_rect)
+        screen.blit(rematch_text, rematch_rect)
+        screen.blit(newgame_text, newgame_rect)
+        screen.blit(main_menu_text, main_menu_rect)
+        screen.blit(quit_text, quit_rect)
+
+        mouse_pos = pygame.mouse.get_pos()
+        if resume_rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0]:
+                resume_active = False
+
+        if rematch_rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0]:
+                surerematch()
+
+        if newgame_rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0]:
+                surenewgame()
+
+        if main_menu_rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0]:
+                suremainmenu()
+
+        if quit_rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0]:
+                surequit()
+
+        pygame.display.flip()
+        clock.tick(FPS)
+
+
+def end_game():
+    end_game_active = True
+    pygame.mixer.music.set_volume(0)
+
+    winner_text = font_score.render(f'{winner} won by scoring {scores} points', True, WHITE)
+    endgame_text = font_score.render('Continue?', True, WHITE)
+    yes_text = font_score.render('Yes', True, WHITE)
+    no_text = font_score.render('No', True, WHITE)
+
+    winner_rect = winner_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 55))
+    endgame_rect = endgame_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+    yes_rect = yes_text.get_rect(center=(WIDTH // 2 - 90, HEIGHT // 2 + 75))
+    no_rect = no_text.get_rect(center=(WIDTH // 2 + 90, HEIGHT // 2 + 75))
+
+    end_rect = pygame.Rect(WIDTH // 4, HEIGHT // 4, WIDTH // 2, HEIGHT // 2)
+    while end_game_active:
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                pygame.quit()
+
+            if e.type == pygame.MOUSEMOTION:
+                if yes_rect.collidepoint(e.pos):
+                    yes_text = font_score.render("Yes", True, RED)
+                else:
+                    yes_text = font_score.render("Yes", True, WHITE)
+                if no_rect.collidepoint(e.pos):
+                    no_text = font_score.render("No", True, RED)
+                else:
+                    no_text = font_score.render("No", True, WHITE)
+
+        pygame.draw.rect(screen, ORANGE, (end_rect))
+        pygame.draw.rect(screen, CYAN, (end_rect), 2)
+
+        screen.blit(winner_text, winner_rect)
+        screen.blit(endgame_text, endgame_rect)
+        screen.blit(yes_text, yes_rect)
+        screen.blit(no_text, no_rect)
+
+        mouse_pos = pygame.mouse.get_pos()
+        if yes_rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0]:
+                global score_player1, score_player2
+                score_player1 = 0
+                score_player2 = 0
+                ball.center = (WIDTH // 2, HEIGHT // 2)
+                player1.center = (20, HEIGHT // 2)
+                player2.center = (WIDTH - 20 - 11, HEIGHT // 2)
+                end_game_active = False
+
+        if no_rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0]:
+                end_game_active = False
+                main_menu()
+
+        pygame.display.flip()
+        clock.tick(FPS)
+
+
+def champion():
+    champion_active = True
+
+    rect_champion = pygame.Rect(WIDTH // 4, HEIGHT // 4, WIDTH // 2, HEIGHT // 2)
+
+    winner_text = font_menu.render(f'{victor} is champion!', True, WHITE)
+    winner_rect = winner_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 40))
+
+    quit = font_score.render('QUIT', True, WHITE)
+    quit_rect = quit.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 65))
+
+    while champion_active:
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                pygame.quit()
+
+            if e.type == pygame.MOUSEMOTION:
+                if quit_rect.collidepoint(e.pos):
+                    quit = font_score.render("QUIT", True, RED)
+                else:
+                    quit = font_score.render("QUIT", True, WHITE)
+
+        pygame.draw.rect(screen, ORANGE, (rect_champion))
+        pygame.draw.rect(screen, CYAN, (rect_champion), 2)
+        screen.blit(winner_text, winner_rect)
+        screen.blit(quit, quit_rect)
+
+        mouse_pos = pygame.mouse.get_pos()
+        if quit_rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0]:
+                pygame.quit()
+
+        pygame.display.flip()
+        clock.tick(FPS)
+
+
+main_menu()
+
+running = True
+while running:
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+    pygame.mixer.music.set_volume(0.05)
+
+    # Y-axis movement
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_ESCAPE]:
+        resume()
+    if keys[pygame.K_w]:
+        player1.y -= 8
+    if keys[pygame.K_s]:
+        player1.y += 8
+    if keys[pygame.K_UP]:
+        player2.y -= 8
+    if keys[pygame.K_DOWN]:
+        player2.y += 8
+    # Limit movement Y-axis
+    player1.y = max(0, min(player1.y, HEIGHT - player1.height))
+    player2.y = max(0, min(player2.y, HEIGHT - player2.height))
+
+    # X-axis movement
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_a]:
+        player1.x -= 4
+    if keys[pygame.K_d]:
+        player1.x += 4
+    if keys[pygame.K_LEFT]:
+        player2.x -= 4
+    if keys[pygame.K_RIGHT]:
+        player2.x += 4
+    # Limit movement X-axis
+    player1.x = max(0, min(player1.x, 200 - player1.width))
+    player2.x = max(WIDTH - 200, min(player2.x, WIDTH - player2.width))
+
+    ball.x += ball_velocity.x
+    ball.y += ball_velocity.y
+
+    if ball.colliderect(player1) or ball.colliderect(player2):
+        hit_sound.play()
+        ball_velocity.x *= -1
+
+    winner = ''
+    win_score = 11
+    if score_player1 >= 9 and score_player2 >= 9:
+        win_score += 1
+
+    if score_player1 >= win_score and score_player1 - score_player2 >= 2:
+        if nickname1 == '':
+            winner = 'Player1'
+        else:
+            winner = nickname1
+        scores = score_player1
+        win_score1 += 1
+        win_sound.play()
+        end_game()
+    elif score_player2 >= win_score and score_player2 - score_player1 >= 2:
+        if nickname2 == '':
+            winner = 'Player2'
+            win_score2 += 1
+        else:
+            winner = nickname2
+            win_score2 += 1
+        scores = score_player2
+        win_sound.play()
+        end_game()
+
+    victor = ''
+    if win_score1 == 3:
+        if nickname1 == '':
+            victor = 'Player1'
+        else:
+            victor = nickname1
+        champion()
+    elif win_score2 == 3:
+        if nickname2 == '':
+            victor = 'Player2'
+        else:
+            victor = nickname2
+        champion()
+
+    if ball.x <= -50:
+        goal_sound.play()
+        goal()
+        ball_velocity.x *= -1
+        ball.center = (WIDTH - 200, HEIGHT // 2)
+    if ball.x >= WIDTH + 50:
+        goal_sound.play()
+        goal()
+        ball.center = (200, HEIGHT // 2)
+        ball_velocity.x *= -1
+    if ball.top <= 0 or ball.bottom >= HEIGHT:
+        ball_velocity.y *= -1
+
+    screen.fill(DARKGREEN)
+
+    pygame.draw.rect(screen, CYAN, player1, 2)
+    pygame.draw.rect(screen, MAGENTA, player2, 2)
+    pygame.draw.line(screen, WHITE, (WIDTH // 2, 0), (WIDTH // 2, HEIGHT))
+    pygame.draw.ellipse(screen, WHITE, ball)
+
+    pause1 = pygame.image.load('pause.png')
+    pause = pygame.transform.scale(pause1, (25, 25))
+    pause_rect = pause.get_rect(center=(WIDTH - 100, 25))
+    screen.blit(pause, pause_rect)
+    mouse_pos = pygame.mouse.get_pos()
+    if pause_rect.collidepoint(mouse_pos):
+        if pygame.mouse.get_pressed()[0]:
+            resume()
+
+    display_score()
+    pygame.display.flip()
+    clock.tick(FPS)
