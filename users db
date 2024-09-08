@@ -1,0 +1,148 @@
+import sqlite3
+
+connection = sqlite3.connect('users.db')
+cursor1 = connection.cursor()
+
+cursor1.execute('CREATE TABLE users (user_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE NOT NULL, password TEXT NOT NULL, age INT)')
+users_list = [
+    ('SonicWarp', '123455', 18),
+    ('FrostyFables', '123456', 15),
+    ('QuantumQuiver', '123457', 15),
+    ('ThunderSprint', '123458', 19),
+    ('ShadowShifter', '123459', 32),
+    ('MysticMomentum', '123454', 31),
+    ('SolarShiver', '123453', 14),
+    ('NebulaNexus', '123452', 17),
+    ('BlazeBlossom', '123451', 14),
+    ('LunarLoom', 'var123456', 21),
+    ('CyberCipher', 'var123457', 23),
+    ('VortexVerve', 'var123458', 24),
+    ('EmberEcho', 'var123459', 22),
+    ('NovaNebulous', 'var123455', 16),
+    ('FireFlare', 'IceIgnition123', 15),
+    ('StarlightStrider', 'var123454', 43),
+    ('ElectricEmber', 'var123453', 33),
+    ('RogueRadiance', 'var123452', 56),
+    ('CosmicCascade', 'var123451', 34),
+    ('QuantumQuotient', 'var12345', 27),
+    ('ThunderTundra', 'var12346', 28),
+    ('MysticMirth', 'var12347', 29),
+    ('SolarSpectacle', 'var12348', 25),
+    ('NebulaNurturer', 'var12349', 13),
+    ('BlazeBard', 'var12343', 19),
+    ('LunarLyric', 'var12342', 20),
+    ('ShadowSerenade', 'var12341', 21),
+    ('FrostFlame', 'war12341', 34),
+    ('CyberCelestial', 'war12342', 56),
+    ('VortexVivacity', 'war12343', 42),
+    ('EmberElation', 'war12344', 65),
+    ('NovaNectar', 'war12345', 26),
+    ('FireFrost', 'war12346', 34),
+    ('IceInception', 'war12347', 17),
+    ('StarlightSovereign', 'war12348', 22),
+    ('ElectricElysium', 'war12349', 24),
+    ('RogueRhapsody', 'bar12349', 54),
+    ('CosmicCrest', 'bar12348', 32),
+    ('OrionOracle', 'bar12347', 23),
+    ('EtherealEmber', 'bar12346', 39),
+    ('ObsidianOracle', 'bar12345', 19),
+    ('EnigmaticEpoch', 'bar12344', 25),
+    ('NovaNemesis', 'bar12343', 41),
+    ('ShadowSphinx', 'bar12342', 36),
+    ('LunarLabyrinth', 'bar12341', 25),
+    ('MysticMarauder', 'bar12340', 34),
+    ('AstralAegis', 'nar12340', 27),
+    ('PhoenixPlasma', 'nar12341', 22),
+    ('SolarSynergy', 'nar12342', 24),
+    ('ElementalEphemera', 'nar12343', 26),
+    ('CosmicCorona', 'nar12344', 45),
+    ('ZephyrZen', 'nar12345', 21),
+    ('VortexVirtuoso', 'nar12346', 33),
+    ('PhoenixPrelude', 'nar12347', 35),
+    ('SolarSapphire', 'nar12348', 29),
+    ('MysticMystique', 'nar12349', 56),
+    ('yeonjuns girl', 'kar12340', 62),
+    ('Champion_i', 'kar12341', 14),
+    ('Ninja_from_china', 'kar12342', 16),
+    ('RisingStar', 'kar12343', 25),
+    ('jason_todd_from_gothamcity', 'kar12344', 57),
+    ('catwomen_left_from_comics', 'kar12345', 49),
+    ('im_not_an_iron_man', 'kar12346', 28)
+]
+
+
+cursor1.executemany('INSERT INTO users (username, password, age) VALUES (?, ?, ?)', users_list)
+
+for row in cursor1.execute('select * from users'):
+     print(row)
+
+connection1 = sqlite3.connect('C:/Users/Админ/PycharmProjects/pythonProject1/bm/list_game.db')
+cursor = connection1.cursor()
+
+cursor.execute('CREATE TABLE Games (user_id INT, type TEXT, name_of_game TEXT, genre TEXT, developer TEXT, price INT, FOREIGN KEY (user_id) REFERENCES users(user_id))')
+games_list = [
+    (101, 'table', 'Resident Evil 4 REMAKE', 'horror', 'CAPCOM Co., Ltd.', 28600),
+    (102, 'table', 'Resident Evil 2 REMAKE', 'horror', 'CAPCOM Co., Ltd.', 15210),
+    (105, 'table', 'Resident Evil 3 REMAKE', 'horror', 'CAPCOM Co., Ltd.', 15210),
+    (101, 'table', 'Resident Evil 5', 'horror', 'CAPCOM', 7749),
+    (101, 'table', 'Resident Evil 6', 'horror', 'CAPCOM', 11600),
+    (101, 'table', 'Resident Evil. biohazard', 'horror', 'CAPCOM Co., Ltd.', 7605),
+    (101, 'table', 'Resident Evil VILLAGE', 'horror', 'CAPCOM Co., Ltd.', 15210),
+    (101, 'table', 'The Quarry', 'decisions with consequences', 'Supermassive Games', 19999),
+    (101, 'table', 'Tiny Bunny', 'horror', 'Saikono', 2500),
+    (101, 'table', 'Mortal Kombat 1', 'fighting', 'NetherRealm Studios', 23300),
+    (101, 'table', 'Five Nights at Freddy', 'horror', 'Scott Cawthon', 1050),#18 авг. 2014, 1050
+    (101, 'table', 'Five Nights at Freddy 2', 'horror', 'Scott Cawthon', 1600), #11 ноя. 2014, 1600
+    (101, 'table', 'Five Nights at Freddy 3', 'horror', 'Scott Cawthon', 1600), #3 мар. 2015, 1600
+    (101, 'table', 'Five Nights at Freddy 3', 'horror', 'Scott Cawthon', 1600), #24 июл. 2015, 1600
+    (101, 'table', 'Five Nights at Freddy: Sister Location', 'horror', 'Scott Cawthon', 1600), #7 окт. 2016, 1600
+    (101, 'table', 'Dead by Daylight', 'horror', 'Behaviour Interactive Inc.', 4499), #14 июн. 2016, 4499
+    (101, 'table', 'The Sims 4', 'Life stimulator', 'Maxis', 0), #2 сен. 2014, 0
+    (101, 'table', 'The Sims 3', 'Life stimulator', 'Maxis', 2650), #2 июн. 2009, 2650
+    (101, 'table', 'Dota 2', 'MOBA', 'Valve', 0), #9 июл. 2013, 0
+    (101, 'table', 'Mortal Kombat 11', 'fighting', 'NetherRealm Studios, \nQLOC, Shiver', 16660), #23 апр. 2019, 16660
+    (101, 'table', 'Street Fighter 6', 'fighting', 'CAPCOM Co., Ltd.', 28468), #1 июн. 2023, 28 468
+    (101, 'table', 'Lethal Company', 'horror', 'Zeekerss', 2900), #24 окт. 2023, 2900
+    (101, 'table', 'Poppy Playtime', 'horror', 'Mob Entertainment', 0), #12 окт. 2021, 0
+    (101, 'table', 'Poppy Playtime2', 'horror', 'Mob Entertainment', 1850), #6 мая. 2022, 1850
+    (101, 'table', 'Doki Doki Literature Club Plus!', 'psychological horror', 'Team Salvato', 4638), #30 июн. 2021, 4638
+    (101, 'table', 'Marvel’s Spider-Man Remastered', 'action', 'Insomniac Games, \nNixxes Software', 23499), #12 авг. 2022, 23499
+    (101, 'table', 'Granny', 'horror', 'DVloper', 1050), #20 ноя. 2018, 1050
+    (101, 'table', 'Granny Remake', 'horror', 'FerriteLabs', 2300), #20 июл. 2023, 2300
+    (101, 'table', 'PUBG: BATTLEGROUNDS', 'Survival', 'KRAFTON, Inc.', 0), #21 дек. 2017, 0
+    (101, 'table', 'Phasmophobia', 'horror', 'Kinetic Games', 2250), #18 сен. 2020, 2250
+    (101, 'table', 'Inside The Backrooms', 'horror', 'MrFatcat', 2100), #20 июн. 2022, 2100
+    (101, 'table', 'Counter-Strike 2', 'First-person shooter', 'Valve', 0), #21 авг. 2012, 0
+    (101, 'table', 'Little Nightmares', 'horror', 'Tarsier Studios', 5990), #28 апр. 2017, 5990
+    (101, 'table', 'Little Nightmares II', 'horror', 'Tarsier Studios', 8990), #11 фев. 2021, 8990
+    (101, 'table', 'theHunter: Call of the Wild', 'hunter', 'Expansive Worlds', 5220), #16 фев. 2017, 5220
+    (101, 'table', 'Pioneers of Pagonia', 'urban planning', 'Envision Entertainment', 7600), #13 дек. 2023, 7600
+    (101, 'table', 'Grand Theft Auto V', 'action', 'Rockstar North', 10800), #14 апр. 2015, 10800
+    (101, 'table', 'Dead Space', 'horror', 'Motive', 19999), #27 янв. 2023, 19999
+    (101, 'table', 'Metro Exodus', 'First-person shooter', '4A Games', 11000), #14 фев. 2019, 11000
+    (101, 'table', 'Fallout 4', 'post-apocalypse', 'Bethesda Game Studios', 7000), #10 ноя. 2015, 7000
+    (101, 'table', 'Fallout 3', 'post-apocalypse', 'Bethesda Game Studios', 6710), #13 окт. 2009,6710
+    (101, 'table', 'Fallout 76', 'dark humor', 'Bethesda Game Studios', 13500), #14 апр. 2020, 13500
+    (101, 'table', 'Detroit: Become Human', 'decisions with consequences', 'Quantic Dream', 10699), #18 июн. 2020, 10699
+    (101, 'table', 'Cyberpunk 2077', 'cyberpunk', 'CD PROJEKT RED', 13199), #10 дек. 2020, 13199
+    (101, 'table', 'Red Dead Redemption 2', 'open world', 'Rockstar Games', 10999), #5 дек. 2019, 10999
+    (101, 'table', 'Bendy and the Ink Machine', 'horror', 'Joey Drew Studios', 2650), #10 фев. 2017, 2650
+    (101, 'table', 'Sally Face, Episode One', 'psychological horror', 'Portable Moose', 890), #15 дек. 2016, 890
+    (101, 'table', 'Sally Face - Season Pass', 'psychological horror', 'Portable Moose', 3400), #15 дек. 2016, 3400
+    (101, 'table', 'Night Security', 'horror', 'Chillas Art', 2300), #17 июн. 2023, 2300
+    (101, 'table', '911: Cannibal', 'action', 'Euphoria Games', 1200), #14 апр. 2023, 1200
+    (101, 'table', 'Garten of Banban 2', 'horror', 'Euphoric Brothers', 1500), #3 мар. 2023, 1500
+    (101, 'table', 'Demonologist', 'horror', 'Clock Wizard Games', 4385) #25 сен. 2023, 4385
+]
+
+cursor.executemany('insert into Games values (?, ?, ?, ?, ?, ?)', games_list)
+
+for row in cursor.execute('select * from Games'):
+    print(row)
+
+connection.commit()
+connection.close()
+connection1.commit()
+connection1.close()
+
+
